@@ -1,0 +1,30 @@
+* text=auto eol=lf
+
+*.sh text eol=lf
+*.zsh text eol=lf
+*.fish text eol=lf
+*.conf text eol=lf
+*.ini text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.jsonc text eol=lf
+*.lua text eol=lf
+*.qml text eol=lf
+*.rasi text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.yuck text eol=lf
+*.md text eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.svg text eol=lf
+*.ttf binary
+*.otf binary
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+*.bdic binary

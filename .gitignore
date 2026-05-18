@@ -1,0 +1,106 @@
+# Repo/editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+*.tmp
+*.temp
+*.bak
+*.bak-*
+*.orig
+*.rej
+
+# Secrets, credentials and local machine identity
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.age
+*.kdbx
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.lock
+**/Cookies
+**/Cookies-journal
+**/Login Data*
+**/Local State
+**/machineid
+**/client_id
+**/TransportSecurity
+**/Trust Tokens*
+**/Network Persistent State
+**/DIPS*
+**/LOCK
+
+# Runtime caches and generated state
+**/Cache/
+**/Cache_Data/
+**/Code Cache/
+**/GPUCache/
+**/DawnGraphiteCache/
+**/DawnWebGPUCache/
+**/GraphiteDawnCache/
+**/ShaderCache/
+**/GrShaderCache/
+**/Crashpad/
+**/logs/
+**/Session Storage/
+**/Local Storage/
+**/IndexedDB/
+**/WebStorage/
+**/Service Worker/
+**/Shared Dictionary/
+**/shared_proto_db/
+**/VideoDecodeStats/
+**/CachedData/
+**/CachedExtensionVSIXs/
+**/CachedProfilesData/
+**/workspaceStorage/
+**/globalStorage/
+**/History/
+**/sync/
+
+# Heavy app profiles. Keep only deliberate small config files outside these dirs.
+.config/BraveSoftware/
+.config/discord/
+.config/obsidian/
+.config/Code/Cache/
+.config/Code/CachedConfigurations/
+.config/Code/Cached*/
+.config/Code/Backups/
+.config/Code/blob_storage/
+.config/Code/Preferences
+.config/Code/User/chatLanguageModels.json
+.config/Code/User/snippets/
+.config/Code/User/globalStorage/
+.config/Code/User/workspaceStorage/
+.config/Code/User/History/
+.config/Code/User/sync/
+
+# Generated desktop/session state
+.config/hypr/.initial_startup_done
+.config/hypr/current_wallpaper
+.config/hypr/wallpaper_effects/
+.config/rofi/.current_wallpaper
+.config/pulse/
+.config/go/telemetry/
+.config/yay/
+.config/systemd/user/*.wants/
+.config/systemd/user/default.target.wants/
+.config/systemd/user/sockets.target.wants/
+.config/systemd/user/pipewire-session-manager.service
+
+# Binary/user-state exports that are not portable by default
+.config/dconf/user
+
+# Package/build output that should not enter a dotfiles repo
+node_modules/
+__pycache__/
+.pytest_cache/
+dist/
+build/
+target/

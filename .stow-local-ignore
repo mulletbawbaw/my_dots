@@ -1,0 +1,10 @@
+\.git
+\.gitignore
+\.gitattributes
+\.stow-local-ignore
+README\.md
+LICENSE
+install\.sh
+scripts
+\.codex
+\.agents
