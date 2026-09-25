@@ -1,10 +1,13 @@
 [StreamInputs]
-inputDevice=alsa_input.pci-0000_09_00.3.analog-stereo
+inputDevice=alsa_input.usb-ME6S_c1_USB_AUDIO-00.mono-fallback
+useDefaultInputDevice=false
+visiblePage=pluginsPage
 
 [StreamOutputs]
 outputDevice=alsa_output.pci-0000_09_00.3.analog-stereo
+useDefaultOutputDevice=false
+visiblePage=pluginsPage
 
 [Window]
 height=1036
-visiblePage=inputPage
 width=950
