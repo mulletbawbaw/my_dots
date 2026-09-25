@@ -1,0 +1,27 @@
+/* GERADO por theme/generate.py a partir de theme/palette.json. Não edite; rode `rice-theme`. */
+:root {
+  --cc-bg: rgba(16, 13, 24, 0.90);
+  --noti-border-color: #49365F;
+  --noti-bg: 25, 19, 35;
+  --noti-bg-alpha: 0.94;
+  --noti-bg-darker: #100D18;
+  --noti-bg-hover: #251B35;
+  --noti-bg-focus: rgba(37, 27, 53, 0.8);
+  --noti-close-bg: #251B35;
+  --noti-close-bg-hover: #FF6B85;
+  --text-color: #EEE8F4;
+  --text-color-disabled: #877A9B;
+  --bg-selected: #B875F0;
+  --border-radius: 8px;
+  --notification-shadow: 0 4px 14px rgba(11, 9, 17, 0.6), 0 0 0 1px rgba(168, 85, 247, 0.25);
+  --mb-ink: #0B0911;
+  --mb-purple: #B875F0;
+  --mb-purple-neon: #A855F7;
+  --mb-green: #B6F36A;
+  --mb-zombie: #91C979;
+  --mb-danger: #FF6B85;
+  --mb-warning: #EBCB78;
+  --mb-muted: #B0A4BE;
+  --mb-surface: #191323;
+  --mb-raised: #251B35;
+}

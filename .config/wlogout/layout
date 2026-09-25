@@ -1,37 +1,30 @@
 {
-    "label" : "exit",
-    "action" : "",
-    "text" : "Exit",
-    "keybind" : "h"
+    "label": "lock",
+    "action": "loginctl lock-session",
+    "text": "󰌾  BLOQUEAR",
+    "keybind": "l"
 }
 {
-    "label" : "shutdown",
-    "action" : "systemctl poweroff",
-    "text" : "Shutdown",
-    "keybind" : "s"
-}
-
-{
-    "label" : "suspend",
-    "action" : "systemctl suspend-then-hibernate",
-    "text" : "Suspend",
-    "keybind" : "u"
+    "label": "logout",
+    "action": "hyprctl dispatch exit",
+    "text": "󰍃  SAIR",
+    "keybind": "e"
 }
 {
-    "label" : "lock",
-    "action" : "hyprlock",
-    "text" : "Lock",
-    "keybind" : "l"
+    "label": "suspend",
+    "action": "systemctl suspend",
+    "text": "󰒲  SUSPENDER",
+    "keybind": "u"
 }
 {
-    "label" : "logout",
-    "action" : "hyprctl dispatch exit",
-    "text" : "Logout",
-    "keybind" : "e"
+    "label": "reboot",
+    "action": "systemctl reboot",
+    "text": "󰜉  REINICIAR",
+    "keybind": "r"
 }
 {
-    "label" : "reboot",
-    "action" : "systemctl reboot",
-    "text" : "Reboot",
-    "keybind" : "r"
+    "label": "shutdown",
+    "action": "systemctl poweroff",
+    "text": "󰐥  DESLIGAR",
+    "keybind": "s"
 }
