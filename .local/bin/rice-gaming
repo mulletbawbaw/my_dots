@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# rice-gaming on|off|toggle|status
+#
+# O que faz (só no Hyprland, só em runtime; nenhum arquivo é reescrito):
+#   on  -> desliga animações, blur, sombras e arredondamento; gaps mínimos.
+#          Menos trabalho do compositor e janelas fullscreen elegíveis para
+#          direct scanout (render:direct_scanout = 2 já está na config).
+#   off -> `hyprctl reload`: volta EXATAMENTE ao que está na config.
+#
+# O que NÃO faz: governor, prioridade de processo, tearing, driver.
+# Isso é papel do GameMode real, por jogo: na Steam use
+#   Opções de inicialização:  gamemoderun %command%
+# (o /etc/gamemode.ini já pede governor performance durante o jogo).
+set -euo pipefail
+
+STATE="${XDG_RUNTIME_DIR:-/tmp}/rice-gaming.on"
+SIGNAL=8   # waybar custom/gaming escuta RTMIN+8
+
+[[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]] || { echo "rice-gaming: só funciona dentro do Hyprland" >&2; exit 1; }
+
+notify() { notify-send -a "MulletBawbaw" -h string:x-canonical-private-synchronous:rice-gaming "$@" 2>/dev/null || true; }
+refresh_bar() { pkill -RTMIN+$SIGNAL -x waybar 2>/dev/null || true; }
+
+gamemode_status() {
+    if command -v gamemoded >/dev/null && gamemoded -s 2>/dev/null | grep -q 'is active'; then
+        echo "GameMode ativo (jogo registrado)"
+    else
+        echo "GameMode inativo; use gamemoderun %command% na Steam"
+    fi
+}
+
+on() {
+    hyprctl --batch "\
+keyword animations:enabled 0;\
+keyword decoration:blur:enabled 0;\
+keyword decoration:shadow:enabled 0;\
+keyword decoration:rounding 0;\
+keyword general:gaps_in 0;\
+keyword general:gaps_out 0;\
+keyword general:border_size 1" >/dev/null
+    : > "$STATE"
+    refresh_bar
+    notify -i input-gaming "󰊴 GAME MODE: ON" "Efeitos desligados. $(gamemode_status)"
+}
+
+off() {
+    rm -f "$STATE"
+    hyprctl reload >/dev/null
+    refresh_bar
+    notify -i input-gaming "󰊴 GAME MODE: OFF" "Visual MulletBawbaw restaurado."
+}
+
+case "${1:-status}" in
+    on)     on ;;
+    off)    off ;;
+    toggle) if [[ -e $STATE ]]; then off; else on; fi ;;
+    status) if [[ -e $STATE ]]; then echo on; else echo off; fi; gamemode_status ;;
+    # Saída JSON para o módulo da waybar
+    waybar)
+        if [[ -e $STATE ]]; then
+            printf '{"text":"󰊴","class":"on","tooltip":"Game mode ON\\n%s\\nClique: desligar"}\n' "$(gamemode_status)"
+        else
+            printf '{"text":"","class":"off","tooltip":""}\n'
+        fi ;;
+    *) echo "uso: rice-gaming on|off|toggle|status" >&2; exit 2 ;;
+esac

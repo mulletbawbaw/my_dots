@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Aplica wallpaper no Hyprland via awww e lembra a escolha.
+#   rice-wall                  -> par padrão MulletBawbaw (main no DP-1, side no resto)
+#   rice-wall <diretório>      -> par: main.png no monitor principal, side.png nos demais
+#   rice-wall <imagem>         -> mesma imagem em todos os monitores
+set -euo pipefail
+PRIMARY="${MB_PRIMARY_OUTPUT:-DP-1}"
+STATE="$HOME/.config/hypr/current_wallpaper"
+TARGET="${1:-$HOME/.local/share/mulletbawbaw/wallpapers/undead-arcade}"
+TARGET="$(realpath "$TARGET")"
+FX=(--transition-type grow --transition-pos 0.5,0.5 --transition-duration 0.6 --transition-fps 144)
+
+pgrep -x awww-daemon >/dev/null || { awww-daemon & sleep 0.5; }
+
+if [[ -d $TARGET ]]; then
+    [[ -f $TARGET/main.png && -f $TARGET/side.png ]] || { echo "par incompleto em $TARGET" >&2; exit 1; }
+    while read -r out; do
+        img="$TARGET/side.png"; [[ $out == "$PRIMARY" ]] && img="$TARGET/main.png"
+        awww img -o "$out" "$img" "${FX[@]}"
+    done < <(hyprctl -j monitors | jq -r '.[].name')
+elif [[ -f $TARGET ]]; then
+    awww img "$TARGET" "${FX[@]}"
+else
+    echo "não encontrado: $TARGET" >&2; exit 1
+fi
+printf '%s\n' "$TARGET" > "$STATE"

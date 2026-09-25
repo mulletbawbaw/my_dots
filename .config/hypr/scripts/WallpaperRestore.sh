@@ -7,7 +7,10 @@ pgrep -x awww-daemon >/dev/null || awww-daemon &
 
 sleep 0.5
 
-if [ -f "$LAST_WALL" ] && [ -f "$(cat "$LAST_WALL")" ]; then
+# Par por monitor (diretório com main.png/side.png) ou nada salvo: usa rice-wall
+if [ ! -f "$LAST_WALL" ] || [ -d "$(cat "$LAST_WALL")" ]; then
+  exec "$HOME/.local/bin/rice-wall" "$( [ -f "$LAST_WALL" ] && cat "$LAST_WALL" )"
+elif [ -f "$(cat "$LAST_WALL")" ]; then
   awww img "$(cat "$LAST_WALL")" \
     --transition-type fade \
     --transition-duration 0.5

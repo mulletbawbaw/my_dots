@@ -1,0 +1,107 @@
+/* ── MulletBawbaw // rofi: "SELECT GAME" ─────────────────────────────
+ * Cores em colors.rasi (gerado por ~/my_dots/theme/generate.py).
+ * Os outros menus (clipboard, emoji, keybinds...) importam config.rasi
+ * e herdam este tema, só ajustando tamanhos.
+ */
+@import "~/.config/rofi/mulletbawbaw/colors.rasi"
+
+* {
+    font:             @mb-font;
+    background-color: transparent;
+    text-color:       @mb-fg;
+    spacing:          0;
+}
+
+window {
+    width:            620px;
+    location:         center;
+    anchor:           center;
+    background-color: @mb-bg;
+    border:           2px 2px 4px 2px;
+    border-color:     @mb-purple-neon;
+    border-radius:    8px;
+    padding:          0;
+}
+
+mainbox {
+    children: [ "header", "inputbar", "message", "listview", "mode-switcher" ];
+    padding:  14px;
+    spacing:  10px;
+}
+
+/* Faixa de título estilo tela de seleção de arcade */
+header {
+    expand:     false;
+    orientation: horizontal;
+    children:   [ "textbox-title", "textbox-hint" ];
+}
+textbox-title {
+    expand:     true;
+    str:        "󰊠 MULLETBAWBAW // SELECT";
+    font:       @mb-font-big;
+    text-color: @mb-green-neon;
+}
+textbox-hint {
+    expand:     false;
+    str:        "↵ START  ⎋ QUIT";
+    text-color: @mb-subtle;
+}
+
+inputbar {
+    children:         [ "prompt", "entry" ];
+    background-color: @mb-surface;
+    border:           0 0 2px 0;
+    border-color:     @mb-border;
+    border-radius:    4px;
+    padding:          2px;
+}
+prompt {
+    background-color: @mb-purple;
+    text-color:       @mb-ink;
+    font:             @mb-font-big;
+    padding:          6px 10px;
+    border-radius:    3px;
+}
+entry {
+    padding:           6px 10px;
+    placeholder:       "digite para buscar...";
+    placeholder-color: @mb-subtle;
+    cursor:            text;
+}
+
+message { background-color: @mb-surface; border-radius: 4px; padding: 6px 10px; }
+textbox { text-color: @mb-muted; }
+
+listview {
+    lines:        8;
+    columns:      1;
+    fixed-height: true;
+    scrollbar:    false;
+    cycle:        true;
+    spacing:      3px;
+}
+element {
+    padding:       7px 10px;
+    border-radius: 4px;
+    spacing:       10px;
+    children:      [ "element-icon", "element-text" ];
+}
+element-icon { size: 24px; vertical-align: 0.5; }
+element-text { vertical-align: 0.5; text-color: inherit; highlight: bold underline; }
+element normal.normal, element alternate.normal { text-color: @mb-fg; }
+element normal.urgent, element alternate.urgent { text-color: @mb-danger; }
+element normal.active, element alternate.active { text-color: @mb-zombie; }
+element selected.normal, element selected.active {
+    background-color: @mb-green-neon;
+    text-color:       @mb-ink;
+}
+element selected.urgent { background-color: @mb-danger; text-color: @mb-ink; }
+
+mode-switcher { spacing: 6px; }
+button {
+    padding:          5px;
+    border-radius:    4px;
+    background-color: @mb-surface;
+    text-color:       @mb-subtle;
+}
+button selected { background-color: @mb-purple; text-color: @mb-ink; }

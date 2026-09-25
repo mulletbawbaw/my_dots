@@ -1,0 +1,23 @@
+/* GERADO por theme/generate.py a partir de theme/palette.json. Não edite; rode `rice-theme`. */
+@define-color mb_ink         #0B0911;
+@define-color mb_bg          #100D18;
+@define-color mb_surface     #191323;
+@define-color mb_raised      #251B35;
+@define-color mb_border      #49365F;
+@define-color mb_navy        #2B2F5E;
+@define-color mb_fg          #EEE8F4;
+@define-color mb_muted       #B0A4BE;
+@define-color mb_subtle      #877A9B;
+@define-color mb_purple      #B875F0;
+@define-color mb_purple_neon #A855F7;
+@define-color mb_zombie      #91C979;
+@define-color mb_green_neon  #B6F36A;
+@define-color mb_danger      #FF6B85;
+@define-color mb_warning     #EBCB78;
+@define-color mb_magenta     #DE75BD;
+@define-color mb_cyan        #79CDD0;
+@define-color mb_blue        #8C96F0;
+@define-color mb_bg_alpha      rgba(16, 13, 24, 0.88);
+@define-color mb_surface_alpha rgba(25, 19, 35, 0.92);
+@define-color mb_glow          rgba(168, 85, 247, 0.35);
+@define-color mb_green_glow    rgba(182, 243, 106, 0.25);

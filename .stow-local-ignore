@@ -7,3 +7,7 @@ LICENSE
 install\.sh
 \.codex
 \.agents
+^/theme
+^/docs
+^/system
+CHANGELOG\.md

@@ -1,128 +1,50 @@
-
+// ── MulletBawbaw // PLAYER STATUS ───────────────────────────────────
+// Cores via códigos ANSI: quem decide o tom é a paleta do terminal
+// (kitty/mulletbawbaw.conf), então tudo segue theme/palette.json.
+//   32 zombie · 92 green_neon · 35 purple · 95 magenta · 33 warning · 90 subtle
+// Perfis antigos continuam disponíveis: config-compact / config-v2 / config-pokemon.
 {
-"$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-"logo": {
-"padding": {
-"top": 1
-}
-},
-"display": {
-"separator": " 󰑃  "
-},
-"modules": [
-    "break",
-    {
-    "type": "os",
-    "key": " DISTRO",
-    "keyColor": "yellow"
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "kitty-direct",
+    "source": "~/.local/share/mulletbawbaw/assets/zombie-fetch.png",
+    "width": 26,
+    "height": 17,
+    "padding": { "top": 1, "left": 2, "right": 3 }
+  },
+  "display": {
+    "separator": "  ",
+    "color": { "keys": "35", "output": "97" },
+    "key": { "width": 12 },
+    "bar": {
+      "char": { "elapsed": "▮", "total": "▯" },
+      "border": { "left": "", "right": "" },
+      "width": 10,
+      "color": { "elapsed": "92", "total": "90" }
     },
-    {
-    "type": "kernel",
-    "key": "│ ├",
-    "keyColor": "yellow"
-    },
-    {
-    "type": "packages",
-    "key": "│ ├󰏖",
-    "keyColor": "yellow"
-    },
-    {
-    "type": "shell",
-    "key": "│ └",
-    "keyColor": "yellow"
-    },
-    {
-    "type": "wm",
-    "key": " DE/WM",
-    "keyColor": "blue"
-    },
-    {
-    "type": "wmtheme",
-    "key": "│ ├󰉼",
-    "keyColor": "blue"
-    },
-    {
-    "type": "icons",
-    "key": "│ ├󰀻",
-    "keyColor": "blue"
-    },
-    {
-        "type": "cursor",
-        "key": "│ ├",
-        "keyColor": "blue",
-    },
-    {
-        "type": "terminalfont",
-        "key": "│ ├",
-        "keyColor": "blue",
-    },
-    {
-    "type": "terminal",
-    "key": "│ └",
-    "keyColor": "blue"
-    },
-    {
-    "type": "host",
-    "key": "󰌢 SYSTEM",
-    "keyColor": "green"
-    },
-    {
-    "type": "cpu",
-    "key": "│ ├󰻠",
-    "keyColor": "green"
-    },
-    {
-    "type": "gpu",
-    "key": "│ ├󰻑",
-    "format": "{2}",
-    "keyColor": "green"
-    },
-    {
-            "type": "display",
-    "key": "│ ├󰍹",
-    "keyColor": "green",
-    "compactType": "original-with-refresh-rate"
-    },
-    {
-    "type": "memory",
-    "key": "│ ├󰾆",
-    "keyColor": "green"
-    },
-    {
-    "type": "swap",
-    "key": "│ ├󰓡",
-    "keyColor": "green"
-    },
-    {
-    "type": "uptime",
-    "key": "│ ├󰅐",
-    "keyColor": "green"
-    },
-    {
-    "type": "display",
-    "key": "│ └󰍹",
-    "keyColor": "green"
-    },
-    {
-    "type": "sound",
-    "key": " AUDIO",
-    "format": "{2}",
-    "keyColor": "magenta"
-    },
-    {
-    "type": "player",
-    "key": "│ ├󰥠",
-    "keyColor": "magenta"
-    },
-    {
-    "type": "media",
-    "key": "│ └󰝚",
-    "keyColor": "magenta"
-    },
-    {
-    "type": "custom",
-    "format": "\u001b[90m  \u001b[31m  \u001b[32m  \u001b[33m  \u001b[34m  \u001b[35m  \u001b[36m  \u001b[37m  \u001b[38m  \u001b[39m  \u001b[39m    \u001b[38m  \u001b[37m  \u001b[36m  \u001b[35m  \u001b[34m  \u001b[33m  \u001b[32m  \u001b[31m  \u001b[90m "
-    },
-    "break",
-    ]
+    "percent": { "color": { "green": "92", "yellow": "33", "red": "31" } }
+  },
+  "modules": [
+    { "type": "custom", "format": "{#1;92}M U L L E T B A W B A W{#0}  {#90}lv.{#0}{#95}99{#0} {#90}undead{#0}" },
+    { "type": "custom", "format": "{#90}// PLAYER STATUS ───────────────────────{#0}" },
+    { "type": "custom", "key": "󰚌 CLASS", "format": "Arch Necromancer {#90}(backend/devops){#0}" },
+    { "type": "os", "key": "󰣇 REALM", "format": "{pretty-name} {#90}{arch}{#0}" },
+    { "type": "kernel", "key": "󰌽 KERNEL", "format": "{release}" },
+    { "type": "wm", "key": "󰕮 SESSION", "format": "{pretty-name} {#90}{version}{#0}" },
+    { "type": "uptime", "key": "󰔛 ALIVE", "format": "{formatted}" },
+
+    { "type": "custom", "format": "{#90}// LOADOUT ─────────────────────────────{#0}" },
+    { "type": "cpu", "key": "󰻠 CPU", "format": "{name} {#90}{cores-physical}c/{cores-logical}t{#0}" },
+    { "type": "gpu", "key": "󰢮 GPU", "format": "{name}", "hideType": "integrated" },
+    { "type": "memory", "key": "󰍛 HP", "format": "{percentage-bar} {used} / {total}" },
+    { "type": "disk", "key": "󰋊 STASH", "folders": "/", "format": "{size-percentage-bar} {size-used} / {size-total}" },
+    { "type": "display", "key": "󰍹 SCREEN", "format": "{width}x{height} {#92}@{refresh-rate}Hz{#0} {#90}{name}{#0}" },
+    { "type": "packages", "key": "󰏗 LOOT", "format": "{all} pacotes" },
+    { "type": "shell", "key": "󰆍 SHELL", "format": "{pretty-name} {#90}{version}{#0}" },
+    { "type": "terminal", "key": "󰄛 TERM", "format": "{pretty-name}" },
+
+    { "type": "custom", "format": "{#90}─────────────────────────────────────────{#0}" },
+    { "type": "custom", "format": "{#32}STATUS{#0}  {#1;92}ALIVE?{#0} {#90}— not really.{#0}   {#5;95}▶ PRESS START{#0}" },
+    { "type": "colors", "symbol": "block", "paddingLeft": 0 }
+  ]
 }

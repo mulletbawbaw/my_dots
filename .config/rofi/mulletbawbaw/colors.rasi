@@ -1,0 +1,20 @@
+/* GERADO por theme/generate.py a partir de theme/palette.json. Não edite; rode `rice-theme`. */
+* {
+    mb-ink:         #0B0911;
+    mb-bg:          rgba(16, 13, 24, 0.94);
+    mb-surface:     #191323;
+    mb-raised:      #251B35;
+    mb-border:      #49365F;
+    mb-fg:          #EEE8F4;
+    mb-muted:       #B0A4BE;
+    mb-subtle:      #877A9B;
+    mb-purple:      #B875F0;
+    mb-purple-neon: #A855F7;
+    mb-zombie:      #91C979;
+    mb-green-neon:  #B6F36A;
+    mb-danger:      #FF6B85;
+    mb-warning:     #EBCB78;
+    mb-magenta:     #DE75BD;
+    mb-font:        "JetBrainsMono Nerd Font 12";
+    mb-font-big:    "JetBrainsMono Nerd Font ExtraBold 13";
+}

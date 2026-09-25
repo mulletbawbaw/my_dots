@@ -1,0 +1,43 @@
+{
+  "name": "MulletBawbaw",
+  "comment": "Fonte única das cores do rice. Edite aqui e rode `rice-theme` para regenerar os arquivos derivados.",
+  "colors": {
+    "ink":            "#0B0911",
+    "bg":             "#100D18",
+    "surface":        "#191323",
+    "raised":         "#251B35",
+    "border":         "#49365F",
+    "navy":           "#2B2F5E",
+
+    "fg":             "#EEE8F4",
+    "muted":          "#B0A4BE",
+    "subtle":         "#877A9B",
+
+    "purple":         "#B875F0",
+    "purple_neon":    "#A855F7",
+    "zombie":         "#91C979",
+    "green_neon":     "#B6F36A",
+    "danger":         "#FF6B85",
+    "warning":        "#EBCB78",
+    "magenta":        "#DE75BD",
+    "cyan":           "#79CDD0",
+    "blue":           "#8C96F0"
+  },
+  "ansi": [
+    "#1E1830", "#FF6B85", "#91C979", "#EBCB78", "#8C96F0", "#B875F0", "#79CDD0", "#B0A4BE",
+    "#5A4A72", "#FF8FA3", "#B6F36A", "#F5DE9A", "#AEB6FF", "#DE75BD", "#A0E8E6", "#EEE8F4"
+  ],
+  "fonts": {
+    "mono": "JetBrainsMono Nerd Font",
+    "ui": "Noto Sans",
+    "mono_size": 14,
+    "ui_size": 10
+  },
+  "shape": {
+    "radius": 8,
+    "radius_small": 4,
+    "border": 2,
+    "gap_in": 4,
+    "gap_out": 8
+  }
+}

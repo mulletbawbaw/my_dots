@@ -1,350 +1,136 @@
-/* ======================================================== */
-/* Gruvbox Dark (Hard) colors */
-/* ======================================================== */
-@define-color bg        #1d2021;
-@define-color fg        #ebdbb2;
-@define-color muted     #928374;
+/* ── MulletBawbaw // waybar ────────────────────────────────────────────
+ * Cores: ../mulletbawbaw/colors.css (gerado por ~/my_dots/theme/generate.py)
+ * Sem animações infinitas: só transições curtas em hover/estado.
+ */
+@import url("../mulletbawbaw/colors.css");
 
-@define-color red       #cc241d;
-@define-color orange    #d65d0e;
-@define-color yellow    #d79921;
-@define-color green     #98971a;
-@define-color aqua      #689d6a;
-@define-color blue      #458588;
-@define-color purple    #b16286;
-
-@define-color bright_red    #fb4934;
-@define-color bright_green  #b8bb26;
-@define-color bright_yellow #fabd2f;
-@define-color bright_aqua   #8ec07c;
-@define-color bright_blue   #83a598;
-@define-color bright_purple #d3869b;
-
-/* ======================================================== */
-/* BASE RESET */
-/* ======================================================== */
 * {
-  padding: 0;
-  margin: 0;
-  min-height: 0;
-  border-radius: 0px;
-  border: none;
-  text-shadow: none;
-  transition: none;
-  box-shadow: none;
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
 }
 
 window#waybar {
-  background: @bg;
-  padding: 3px 0;
-  font-family: "JetBrainsMono Nerd Font", monospace;
-  font-weight: bold;
-  font-size: 14px;
+    background: transparent;
+    color: @mb_fg;
 }
 
-window#waybar.hidden {
-  opacity: 0.98;
+/* Cada lado da barra é um "painel" com borda neon embaixo, estilo HUD */
+.modules-left, .modules-center, .modules-right {
+    background: @mb_bg_alpha;
+    border: 1px solid @mb_border;
+    border-bottom: 2px solid @mb_purple_neon;
+    border-radius: 8px;
+    padding: 0 4px;
 }
 
-/* ======================================================== */
-/* COMMON MODULE STYLE */
-/* ======================================================== */
-#window,
-#custom-updates,
-#tray,
-#network,
-#wireplumber,
-#battery,
-#backlight,
-#clock,
-#memory,
-#cpu,
-#custom-launcher,
-#custom-bluetooth,
-#idle_inhibitor,
-#custom-mpris-prev,
-#custom-mpris-next,
-#custom-modes,
-#mpris {
-  color: @fg;
-  margin: 2px 6px;
-  padding: 3px 7px;
-  border-bottom: 2px solid @muted;
+tooltip {
+    background: @mb_surface;
+    border: 1px solid @mb_purple_neon;
+    border-radius: 6px;
+}
+tooltip label { color: @mb_fg; font-weight: 500; }
+
+/* Base de todos os módulos */
+#custom-bb, #custom-p2, #workspaces button, #submap, #window, #clock, #custom-gaming,
+#mpris, #cpu, #memory, #custom-gpu, #temperature, #custom-docker,
+#wireplumber, #bluetooth, #network, #tray, #idle_inhibitor, #custom-swaync, #custom-power {
+    padding: 0 8px;
+    margin: 4px 1px;
+    border-radius: 4px;
+    color: @mb_fg;
+    transition: background-color 120ms ease-out, color 120ms ease-out;
 }
 
-/* ======================================================== */
-/* Power Profiles Daemon */
-/* ======================================================== */
-#power-profiles-daemon {
-  font-size: 14px;
-  padding: 3px 7px;
-  margin: 2px 6px;
-  border-bottom: 2px solid @muted;
-  color: @fg;
+/* Marca: "cartucho" verde com texto escuro */
+#custom-bb {
+    background: @mb_green_neon;
+    color: @mb_ink;
+    font-weight: 800;
+    margin-left: 0;
 }
-#power-profiles-daemon.performance {
-  color: @red;
-  border-bottom-color: @red;
-}
-#power-profiles-daemon.balanced {
-  color: @green;
-  border-bottom-color: @green;
-}
-#power-profiles-daemon.power-saver {
-  color: @blue;
-  border-bottom-color: @blue;
+#custom-bb:hover { background: @mb_purple; }
+#custom-p2 {
+    background: @mb_purple;
+    color: @mb_ink;
+    font-weight: 800;
 }
 
-
-/* ======================================================== */
-/* Idle Inhibitor */
-/* ======================================================== */
-#idle_inhibitor {
-  color: @yellow;
-  border-bottom-color: @yellow;
-}
-#idle_inhibitor.activated {
-  color: @green;
-  border-bottom-color: @green;
-}
-#idle_inhibitor.deactivated {
-  color: @red;
-  border-bottom-color: @red;
-}
-
-/* ======================================================== */
-/* CPU */
-/* ======================================================== */
-#cpu {
-  color: @green;
-  border-bottom-color: @green;
-}
-#cpu.warning {
-  color: @yellow;
-  border-bottom-color: @yellow;
-}
-#cpu.critical {
-  color: @red;
-  border-bottom-color: @red;
-}
-
-/* ======================================================== */
-/* Memory */
-/* ======================================================== */
-#memory {
-  color: @aqua;
-  border-bottom-color: @aqua;
-}
-#memory.warning {
-  color: @orange;
-  border-bottom-color: @orange;
-}
-#memory.critical {
-  color: @red;
-  border-bottom-color: @red;
-}
-
-/* ======================================================== */
-/* Battery */
-/* ======================================================== */
-#battery {
-  color: @bright_green;
-  border-bottom-color: @bright_green;
-}
-#battery.charging,
-#battery.plugged {
-  color: @green;
-  border-bottom-color: @green;
-}
-#battery.warning:not(.charging) {
-  color: @yellow;
-  border-bottom-color: @yellow;
-}
-#battery.critical:not(.charging) {
-  color: @red;
-  border-bottom-color: @red;
-}
-
-/* ======================================================== */
-/* custom-swaync */
-/* ======================================================== */
-#custom-swaync {
-  font-size: 12px;
-  color: @red;
-  border-bottom: 2px solid @red;
-  padding: 3px 7px;
-  margin: 2px 6px;
-}
-
-/* ======================================================== */
-/* custom-cava */
-/* ======================================================== */
-#custom-cava {
-  font-size: 12px;
-  padding: 0 8px;
-  letter-spacing: 1px;
-  color: @green;
-  border-bottom: 2px solid @green;
-  margin: 2px 0;
-}
-
-/* ======================================================== */
-/* Workspaces */
-/* ======================================================== */
-#workspaces {
-  color: @bg;
-  border-bottom: 2px solid @green;
-  margin: 2px;
-}
+/* Workspaces: slots de inventário */
+#workspaces { margin: 0 2px; }
 #workspaces button {
-  color: @fg;
-  margin: 3px 1px;
-  min-width: 20px;
-  padding: 0 2px;
+    padding: 0 7px;
+    color: @mb_subtle;
+    background: transparent;
+    box-shadow: none;
 }
-#workspaces button:hover {
-  background: @bright_green;
+#workspaces button.empty { color: @mb_border; }
+#workspaces button:not(.empty) { color: @mb_purple; }
+#workspaces button.visible:not(.active) {
+    color: @mb_fg;
+    box-shadow: inset 0 -2px @mb_purple;
 }
 #workspaces button.active {
-  background: @green;
-  color: @bg;
+    background: @mb_green_neon;
+    color: @mb_ink;
 }
-#workspaces button.urgent {
-  background: @bright_red;
+#workspaces button.urgent { background: @mb_danger; color: @mb_ink; }
+#workspaces button:hover { background: @mb_raised; color: @mb_fg; }
+#workspaces button.active:hover { background: @mb_green_neon; color: @mb_ink; }
+
+#submap { background: @mb_warning; color: @mb_ink; }
+#window { color: @mb_muted; font-weight: 500; font-family: "Noto Sans", sans-serif; }
+window#waybar.empty #window { color: @mb_subtle; }
+
+/* Centro */
+#clock { color: @mb_fg; font-weight: 800; letter-spacing: 1px; }
+#clock:hover { color: @mb_green_neon; }
+#custom-gaming.on {
+    background: @mb_danger;
+    color: @mb_ink;
+    padding: 0 10px;
 }
 
-/* ======================================================== */
-/* Window title */
-/* ======================================================== */
-#window {
-  color: @bg;
-  background: @bright_purple;
-  border-bottom-color: @blue;
-  margin: 2px 6px;
-  padding: 3px 7px;
-}
-window#waybar.empty #window {
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  color: transparent;
-  border-bottom: none;
-}
+/* Direita */
+#mpris { color: @mb_zombie; }
+#mpris.paused { color: @mb_subtle; }
+#mpris.spotify { color: @mb_green_neon; }
 
-/* ======================================================== */
-/* Network */
-/* ======================================================== */
-#network {
-  color: @orange;
-  border-bottom-color: @orange;
+#cpu, #memory, #custom-gpu, #temperature { color: @mb_purple; }
+#cpu.warning, #memory.warning, #custom-gpu.warning { color: @mb_warning; }
+#cpu.critical, #memory.critical, #custom-gpu.critical, #temperature.critical {
+    background: @mb_danger;
+    color: @mb_ink;
 }
-#network.disconnected {
-  color: @red;
-  border-bottom-color: @red;
-}
+.sensor-extra { color: @mb_cyan; }
 
-/* ======================================================== */
-/* Audio */
-/* ======================================================== */
-#wireplumber {
-  color: @aqua;
-  border-bottom-color: @aqua;
-}
-#wireplumber.muted {
-  color: @bright_red;
-  border-bottom-color: @bright_red;
-}
+#custom-docker { color: @mb_blue; }
 
-/* ======================================================== */
-/* Backlight */
-/* ======================================================== */
-#backlight {
-  color: @bright_yellow;
-  border-bottom-color: @bright_yellow;
-}
+#wireplumber { color: @mb_fg; }
+#wireplumber.muted { color: @mb_danger; }
+#wireplumber.mic { color: @mb_zombie; padding: 0 6px; }
+#wireplumber.mic.muted { background: @mb_danger; color: @mb_ink; }
 
-/* ======================================================== */
-/* Clock */
-/* ======================================================== */
-#clock {
-  color: @bright_aqua;
-  border-bottom-color: @bright_aqua;
-}
+#bluetooth { color: @mb_blue; }
+#bluetooth.connected { color: @mb_cyan; }
+#bluetooth.off, #bluetooth.disabled { color: @mb_subtle; }
+#network { color: @mb_zombie; }
+#network.disconnected, #network.linked { color: @mb_danger; }
 
-/* ======================================================== */
-/* Tray */
-/* ======================================================== */
-#tray {
-  padding: 3px 7px;
-  margin: 0 6px;
-  border-bottom-color: @fg;
-}
+#tray > .needs-attention { background: @mb_danger; border-radius: 4px; }
+#idle_inhibitor { color: @mb_subtle; }
+#idle_inhibitor.activated { color: @mb_warning; }
+#custom-swaync { color: @mb_purple; }
+#custom-swaync.notification, #custom-swaync.dnd-notification { color: @mb_green_neon; }
+#custom-swaync.dnd-none, #custom-swaync.dnd-notification { color: @mb_danger; }
+#custom-power { color: @mb_danger; margin-right: 0; }
+#custom-power:hover { background: @mb_danger; color: @mb_ink; }
 
-/* ======================================================== */
-/* Launcher */
-/* ======================================================== */
-#custom-launcher {
-  color: @bright_blue;
-  font-size: 12px;
-  margin: 0 6px;
-  border-bottom-color: @bright_blue;
+#cpu:hover, #memory:hover, #custom-gpu:hover, #temperature:hover, #custom-docker:hover,
+#wireplumber:hover, #bluetooth:hover, #network:hover, #idle_inhibitor:hover,
+#custom-swaync:hover, #mpris:hover, #window:hover {
+    background: @mb_raised;
 }
-
-/* ======================================================== */
-/* Bluetooth */
-/* ======================================================== */
-#custom-bluetooth {
-  color: @blue;
-  border-bottom-color: @blue;
-}
-
-/* ======================================================== */
-/* MPRIS controls */
-/* ======================================================== */
-#mpris {
-  color: @aqua;
-  border-bottom-color: @aqua;
-}
-#mpris:hover {
-  color: @bright_green;
-  border-bottom-color: @bright_green;
-}
-#custom-mpris-prev,
-#custom-mpris-next {
-  color: @aqua;
-  border-bottom-color: @aqua;
-}
-#custom-mpris-prev:hover,
-#custom-mpris-next:hover {
-  color: @bright_green;
-  border-bottom-color: @bright_green;
-}
-
-/* ======================================================== */
-/* Taskbar */
-/* ======================================================== */
-#taskbar {
-  background: transparent;
-  padding: 0;
-  margin: 0 6px;
-  border-bottom: none;
-}
-#taskbar button {
-  background: transparent;
-  border: none;
-  margin: 2px 1px;
-  padding: 2px;
-  color: @fg;
-  border-bottom: 2px solid @muted;
-  min-width: 14px;
-}
-#taskbar button.active {
-  border-bottom-color: @green;
-}
-#taskbar button:hover {
-  border-bottom-color: @bright_green;
-}
-#taskbar button.urgent {
-  border-bottom-color: @bright_red;
-}
-

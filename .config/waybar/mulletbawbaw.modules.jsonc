@@ -1,0 +1,209 @@
+// Módulos da waybar MulletBawbaw. Quase tudo é event-driven (IPC do Hyprland,
+// PipeWire, D-Bus). Polling só onde não há evento: cpu/mem 5 s, gpu 10 s, docker 30 s.
+{
+  "custom/bb": {
+    "format": "󰊠 BB",
+    "tooltip-format": "MulletBawbaw\nclique: apps · direito: player status",
+    "on-click": "pkill rofi || rofi -show drun",
+    "on-click-right": "kitty --hold -e fastfetch"
+  },
+  "custom/p2": {
+    "format": "P2",
+    "tooltip": false,
+    "on-click": "pkill rofi || rofi -show drun"
+  },
+
+  // Cada slot mostra o número + ícones dos apps que estão nele de verdade.
+  "hyprland/workspaces": {
+    "format": "{name}{windows}",
+    "format-window-separator": "",
+    "window-rewrite-default": " 󰣆",
+    "window-rewrite": {
+      "class<kitty>": " 󰄛",
+      "class<kitty> title<.*nvim.*>": " 󰕲",
+      "class<Brave-browser>": " 󰖟",
+      "class<firefox>": " 󰈹",
+      "class<(discord|vesktop|WebCord)>": " 󰙯",
+      "class<steam>": " 󰓓",
+      "class<steam_app_.*>": " 󰊴",
+      "class<Project Zomboid>": " 󰊴",
+      "class<gamescope>": " 󰊴",
+      "class<(codium|VSCodium|code)>": " 󰨞",
+      "class<jetbrains-.*>": " 󰅩",
+      "class<org.kde.krita|krita>": " 󰏘",
+      "class<blender>": " 󰂫",
+      "class<[Aa]seprite|steam_app_431730>": " 󰸭",
+      "class<[Gg]odot.*>": " 󰊗",
+      "class<[Ss]potify>": " 󰓇",
+      "class<com.obsproject.Studio>": " 󰑋",
+      "class<(thunar|Thunar)>": " 󰉋",
+      "class<obsidian>": " 󰠮",
+      "class<(mpv|vlc)>": " 󰐊",
+      "class<pavucontrol|org.pulseaudio.pavucontrol>": " 󰕾"
+    },
+    "persistent-workspaces": {
+      "DP-1": [1, 2, 3, 4, 5],
+      "HDMI-A-1": [6, 7, 8, 9, 10]
+    },
+    "on-scroll-up": "hyprctl dispatch workspace m-1",
+    "on-scroll-down": "hyprctl dispatch workspace m+1"
+  },
+  "hyprland/submap": {
+    "format": "󰩨 {}",
+    "tooltip": false
+  },
+  "hyprland/window": {
+    "format": "{title}",
+    "max-length": 48,
+    "separate-outputs": true,
+    "rewrite": { "": "// idle" }
+  },
+
+  "clock": {
+    "format": "{:%I:%M %p}",
+    "format-alt": "󰃭 {:%a %d/%m}",
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "weeks-pos": "",
+      "format": {
+        "months": "<b>{}</b>",
+        "weekdays": "<b>{}</b>",
+        "today": "<span weight='heavy' underline='single'>{}</span>"
+      }
+    },
+    "actions": { "on-scroll-up": "shift_up", "on-scroll-down": "shift_down" }
+  },
+  "custom/gaming": {
+    "exec": "$HOME/.local/bin/rice-gaming waybar",
+    "return-type": "json",
+    "interval": "once",
+    "signal": 8,
+    "on-click": "$HOME/.local/bin/rice-gaming off"
+  },
+
+  "mpris": {
+    "format": "{player_icon} {dynamic}",
+    "format-paused": "󰏤 {dynamic}",
+    "format-stopped": "",
+    "dynamic-order": ["title", "artist"],
+    "dynamic-len": 34,
+    "ignore-list": ["vesktop"],
+    "player-icons": { "default": "󰎆", "spotify": "󰓇", "brave": "󰖟", "firefox": "󰈹", "mpv": "󰐊" },
+    "tooltip-format": "{player}: {title}\n{artist} — {album}\n{position} / {length}",
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next",
+    "on-click-middle": "playerctl previous"
+  },
+
+  "cpu": {
+    "interval": 5,
+    "format": "󰻠 {usage}%",
+    "states": { "warning": 70, "critical": 90 },
+    "on-click": "kitty -e btop"
+  },
+  "memory": {
+    "interval": 10,
+    "format": "󰍛 {used:0.1f}G",
+    "tooltip-format": "RAM {used:0.1f} / {total:0.1f} GiB ({percentage}%)\nSwap (zram) {swapUsed:0.1f} / {swapTotal:0.1f} GiB",
+    "states": { "warning": 75, "critical": 90 },
+    "on-click": "kitty -e btop"
+  },
+  // Passe o mouse na GPU para revelar a temperatura do CPU
+  "group/sensors": {
+    "orientation": "inherit",
+    "drawer": { "transition-duration": 220, "children-class": "sensor-extra", "transition-left-to-right": false },
+    "modules": ["custom/gpu", "temperature"]
+  },
+  "custom/gpu": {
+    "exec": "$HOME/.config/waybar/scripts/mb-gpu.sh",
+    "return-type": "json",
+    "format": "󰢮 {}",
+    "on-click": "kitty -e nvtop"
+  },
+  "temperature": {
+    "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
+    "input-filename": "temp1_input",
+    "interval": 10,
+    "critical-threshold": 85,
+    "format": "󰔏 {temperatureC}°",
+    "tooltip-format": "Ryzen (Tctl) {temperatureC}°C"
+  },
+  "custom/docker": {
+    "exec": "$HOME/.config/waybar/scripts/mb-docker.sh",
+    "return-type": "json",
+    "interval": 30,
+    "format": "󰡨 {}",
+    "on-click": "kitty -e sh -c 'docker ps; exec zsh'"
+  },
+
+  "wireplumber": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟 mudo",
+    "format-icons": ["󰕿", "󰖀", "󰕾"],
+    "max-volume": 120,
+    "scroll-step": 2,
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-click-right": "pavucontrol",
+    "on-click-middle": "easyeffects"
+  },
+  "wireplumber#mic": {
+    "node-type": "Audio/Source",
+    "format": "󰍬",
+    "format-muted": "󰍭",
+    "tooltip-format": "Microfone: {node_name} ({volume}%)",
+    "scroll-step": 2,
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+    "on-click-right": "pavucontrol -t 4"
+  },
+  "bluetooth": {
+    "format": "󰂯",
+    "format-disabled": "󰂲",
+    "format-off": "󰂲",
+    "format-connected": "󰂱 {num_connections}",
+    "tooltip-format": "{controller_alias}: {status}",
+    "tooltip-format-connected": "{controller_alias}\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+    "on-click": "blueman-manager"
+  },
+  "network": {
+    "format-ethernet": "󰈀",
+    "format-wifi": "{icon}",
+    "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
+    "format-linked": "󰈀 sem IP",
+    "format-disconnected": "󰖪",
+    "tooltip-format-ethernet": "{ifname}  {ipaddr}\n󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
+    "tooltip-format-wifi": "{essid} ({signalStrength}%)  {ipaddr}\n󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
+    "tooltip-format-disconnected": "Desconectado",
+    "interval": 10,
+    "on-click": "kitty -e nmtui",
+    "on-click-right": "nm-connection-editor"
+  },
+
+  "tray": { "icon-size": 15, "spacing": 8 },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": { "activated": "󰅶", "deactivated": "󰾪" },
+    "tooltip-format-activated": "Não dormir: ON",
+    "tooltip-format-deactivated": "Não dormir: OFF"
+  },
+  "custom/swaync": {
+    "exec": "swaync-client -swb",
+    "return-type": "json",
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "󰂚", "none": "󰂜",
+      "dnd-notification": "󰂛", "dnd-none": "󰪑",
+      "inhibited-notification": "󰂚", "inhibited-none": "󰂜",
+      "dnd-inhibited-notification": "󰂛", "dnd-inhibited-none": "󰪑"
+    },
+    "tooltip": false,
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw"
+  },
+  "custom/power": {
+    "format": "⏻",
+    "tooltip-format": "CONTINUE?",
+    "on-click": "wlogout -b 5 -T 400 -B 400"
+  }
+}

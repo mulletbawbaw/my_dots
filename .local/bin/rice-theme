@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Regenera as cores do rice MulletBawbaw a partir de ~/my_dots/theme/palette.json
+# e recarrega os componentes que estiverem rodando. Uso: rice-theme [--check|--contrast]
+set -euo pipefail
+DOTS="${MB_DOTS:-$HOME/my_dots}"
+
+python3 "$DOTS/theme/generate.py" "$@"
+[[ $# -gt 0 ]] && exit 0   # --check / --contrast não recarregam nada
+
+# Arquivos novos precisam de link; stow ignora os que já existem.
+stow --dir="$DOTS" --target="$HOME" --no-folding . 2>/dev/null || echo "aviso: stow reportou conflito; rode manualmente com --verbose" >&2
+
+if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+    hyprctl reload >/dev/null
+    pkill -SIGUSR2 waybar 2>/dev/null || true          # recarrega CSS da waybar
+    swaync-client --reload-css >/dev/null 2>&1 || true
+fi
+pkill -SIGUSR1 kitty 2>/dev/null || true               # kitty relê kitty.conf
+echo "rice recarregado"
