@@ -1,12 +1,12 @@
 return {
-  -- add gruvbox
-  { "ellisonleao/gruvbox.nvim" },
+  -- Motor de cores; carregado sob demanda por colors/mulletbawbaw.lua
+  { "ellisonleao/gruvbox.nvim", lazy = true },
 
-  -- Configure LazyVim to load gruvbox
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "gruvbox",
+      -- Rollback: colorscheme = "gruvbox"
+      colorscheme = "mulletbawbaw",
     },
   },
 }
