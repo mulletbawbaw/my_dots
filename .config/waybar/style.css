@@ -35,7 +35,7 @@ tooltip {
 tooltip label { color: @mb_fg; font-weight: 500; }
 
 /* Base de todos os módulos */
-#custom-bb, #custom-p2, #workspaces button, #submap, #window, #clock, #custom-gaming,
+#custom-bb, #custom-help, #custom-p2, #workspaces button, #submap, #window, #clock, #custom-gaming,
 #mpris, #cpu, #memory, #custom-gpu, #temperature, #custom-docker,
 #wireplumber, #bluetooth, #network, #tray, #idle_inhibitor, #custom-swaync, #custom-power {
     padding: 0 8px;
@@ -53,6 +53,8 @@ tooltip label { color: @mb_fg; font-weight: 500; }
     margin-left: 0;
 }
 #custom-bb:hover { background: @mb_purple; }
+#custom-help { color: @mb_green_neon; font-size: 15px; }
+#custom-help:hover { background: @mb_surface; }
 #custom-p2 {
     background: @mb_purple;
     color: @mb_ink;

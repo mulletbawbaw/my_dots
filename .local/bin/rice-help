@@ -1,0 +1,273 @@
+#!/usr/bin/env python3
+"""rice-help: central de atalhos e recursos do MulletBawbaw (Hyprland).
+
+Lê os atalhos AO VIVO via `hyprctl binds -j` (então reflete rice.conf, unbinds
+e qualquer mudança futura sem editar este arquivo) e mostra tudo num rofi
+pesquisável, agrupado por categoria. Enter executa o item selecionado.
+
+Descrições: tabela DESCR abaixo (regex sobre "dispatcher arg"). Atalho sem
+descrição conhecida aparece com o comando cru, então nada some da lista.
+Para adicionar um recurso que não é atalho, edite FEATURES.
+
+Uso: rice-help            (menu)
+     rice-help --list     (imprime no terminal, sem rofi)
+"""
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+HOME = os.path.expanduser("~")
+THEME = os.path.join(HOME, ".config/rofi/mulletbawbaw/help.rasi")
+
+# modmask do Hyprland -> nome (ordem de exibição)
+MODS = [(64, "SUPER"), (4, "CTRL"), (8, "ALT"), (1, "SHIFT")]
+
+KEYNAMES = {
+    "return": "Enter", "space": "Espaço", "tab": "Tab", "escape": "Esc",
+    "print": "PrtSc", "delete": "Del", "left": "←", "right": "→", "up": "↑", "down": "↓",
+    "comma": ",", "period": ".", "bracketleft": "[", "bracketright": "]",
+    "page_up": "PgUp", "page_down": "PgDn", "mouse_down": "Scroll ↓", "mouse_up": "Scroll ↑",
+    "mouse:272": "Botão esq. (arrastar)", "mouse:273": "Botão dir. (arrastar)",
+    "shift_l": "Shift esq.", "alt_l": "Alt esq.",
+    "xf86audioraisevolume": "Vol +", "xf86audiolowervolume": "Vol −",
+    "xf86audiomute": "Mudo", "xf86audiomicmute": "Mic mudo",
+    "xf86audioplaypause": "Play/Pause", "xf86audioplay": "Play", "xf86audiopause": "Pause",
+    "xf86audionext": "Próxima", "xf86audioprev": "Anterior", "xf86audiostop": "Stop",
+    "xf86sleep": "Sleep", "xf86rfkill": "Tecla avião", "xf86touchpadtoggle": "Tecla touchpad",
+    "xf86monbrightnessup": "Brilho +", "xf86monbrightnessdown": "Brilho −",
+    "xf86kbdbrightnessup": "Luz teclado +", "xf86kbdbrightnessdown": "Luz teclado −",
+}
+# keycodes (atalhos com code:NN) das teclas numéricas
+KEYCODES = {10: "1", 11: "2", 12: "3", 13: "4", 14: "5", 15: "6", 16: "7", 17: "8", 18: "9", 19: "0"}
+
+# (categoria, regex sobre "dispatcher arg", descrição). Primeiro match vence.
+DESCR = [
+    # Prints
+    ("Print", r"ScreenShot\.sh --area", "Print de ÁREA → salva em ~/Pictures/Screenshots + clipboard"),
+    ("Print", r"ScreenShot\.sh --swappy", "Print de área → abre no swappy para anotar"),
+    ("Print", r"ScreenShot\.sh --now", "Print da tela inteira (salva + clipboard)"),
+    ("Print", r"ScreenShot\.sh --active", "Print só da janela ativa"),
+    ("Print", r"ScreenShot\.sh --in5", "Print da tela em 5 segundos"),
+    ("Print", r"ScreenShot\.sh --in10", "Print da tela em 10 segundos"),
+    # Apps e menus
+    ("Apps", r"^exec kitty$", "Terminal (kitty)"),
+    ("Apps", r"Dropterminal", "Terminal suspenso (dropdown)"),
+    ("Apps", r"rofi -show drun", "Menu de aplicativos"),
+    ("Apps", r"^exec thunar", "Gerenciador de arquivos (Thunar)"),
+    ("Apps", r"xdg-open \"https", "Navegador padrão"),
+    ("Apps", r"RofiSearch", "Pesquisar na web (rofi)"),
+    ("Apps", r"RofiEmoji", "Seletor de emoji"),
+    ("Apps", r"RofiCalc", "Calculadora (rofi)"),
+    ("Apps", r"ClipManager", "Histórico do clipboard"),
+    ("Apps", r"RofiBeats", "Rádio / músicas online (RofiBeats)"),
+    ("Apps", r"qs -c overview", "Visão geral dos workspaces"),
+    ("Apps", r"KeyHints|KeyBinds|rice-help", "Esta central de atalhos"),
+    # Janelas
+    ("Janelas", r"^killactive", "Fechar janela"),
+    ("Janelas", r"KillActiveProcess", "Matar processo da janela (force)"),
+    ("Janelas", r"^fullscreen 1", "Maximizar (mantém barra)"),
+    ("Janelas", r"^fullscreen", "Tela cheia"),
+    ("Janelas", r"^togglefloating", "Alternar janela flutuante"),
+    ("Janelas", r"allfloat", "Todas as janelas flutuantes no workspace"),
+    ("Janelas", r"^pseudo", "Pseudo-tile"),
+    ("Janelas", r"^movefocus", "Mover foco"),
+    ("Janelas", r"^movewindow mon:", "Mandar janela para outro monitor"),
+    ("Janelas", r"^movewindow", "Mover janela"),
+    ("Janelas", r"^swapwindow", "Trocar janela de lugar"),
+    ("Janelas", r"^mouse movewindow", "Arrastar janela"),
+    ("Janelas", r"^mouse resizewindow", "Redimensionar janela"),
+    ("Janelas", r"^submap resize", "Modo redimensionar (setas/hjkl, Esc sai)"),
+    ("Janelas", r"^resizeactive", "Redimensionar (dentro do modo resize)"),
+    ("Janelas", r"^submap reset", "Sair do modo redimensionar"),
+    ("Janelas", r"^togglegroup", "Agrupar janelas (abas)"),
+    ("Janelas", r"^changegroupactive", "Próxima aba do grupo"),
+    ("Janelas", r"^cyclenext|^bringactivetotop", "Alternar entre janelas"),
+    ("Janelas", r"opaque toggle", "Alternar opacidade da janela"),
+    ("Janelas", r"^layoutmsg", "Layout: {arg}"),
+    ("Janelas", r"splitratio", "Proporção do split 0.3"),
+    ("Janelas", r"ChangeLayout", "Alternar layout Dwindle / Master"),
+    ("Janelas", r"cursor:zoom_factor.*\* 2", "Zoom da tela +"),
+    ("Janelas", r"cursor:zoom_factor.*/ 2", "Zoom da tela −"),
+    # Workspaces
+    ("Workspaces", r"^workspace (\d+)$", "Ir para workspace {n}"),
+    ("Workspaces", r"^movetoworkspace (\d+)$", "Mover janela p/ workspace {n} (e ir junto)"),
+    ("Workspaces", r"^movetoworkspacesilent (\d+)$", "Mover janela p/ workspace {n} (ficar aqui)"),
+    ("Workspaces", r"^workspace [em]\+1", "Próximo workspace"),
+    ("Workspaces", r"^workspace [em]-1", "Workspace anterior"),
+    ("Workspaces", r"^movetoworkspace(silent)? \+1", "Mover janela p/ próximo workspace"),
+    ("Workspaces", r"^movetoworkspace(silent)? -1", "Mover janela p/ workspace anterior"),
+    ("Workspaces", r"^movetoworkspace special", "Mandar janela p/ scratchpad"),
+    ("Workspaces", r"^togglespecialworkspace", "Mostrar/ocultar scratchpad"),
+    # Mídia
+    ("Mídia", r"Volume\.sh --inc", "Aumentar volume"),
+    ("Mídia", r"Volume\.sh --dec", "Diminuir volume"),
+    ("Mídia", r"Volume\.sh --toggle-mic", "Mutar microfone"),
+    ("Mídia", r"Volume\.sh --toggle", "Mutar som"),
+    ("Mídia", r"MediaCtrl\.sh --pause", "Play / pause"),
+    ("Mídia", r"MediaCtrl\.sh --nxt", "Próxima faixa"),
+    ("Mídia", r"MediaCtrl\.sh --prv", "Faixa anterior"),
+    ("Mídia", r"MediaCtrl\.sh --stop", "Parar mídia"),
+    ("Mídia", r"BrightnessKbd\.sh --inc", "Luz do teclado +"),
+    ("Mídia", r"BrightnessKbd\.sh --dec", "Luz do teclado −"),
+    ("Mídia", r"Brightness\.sh --inc", "Brilho +"),
+    ("Mídia", r"Brightness\.sh --dec", "Brilho −"),
+    # Visual / rice
+    ("Visual", r"rice-gaming", "Modo jogo (sem efeitos) liga/desliga"),
+    ("Visual", r"WallpaperPicker|WallpaperSelect", "Escolher wallpaper"),
+    ("Visual", r"WallpaperEffects", "Efeitos no wallpaper"),
+    ("Visual", r"WallpaperRandom", "Wallpaper aleatório"),
+    ("Visual", r"SIGUSR1 waybar", "Mostrar/ocultar waybar"),
+    ("Visual", r"WaybarStyles", "Estilo da waybar"),
+    ("Visual", r"WaybarLayout", "Layout da waybar"),
+    ("Visual", r"RofiThemeSelector", "Tema do rofi"),
+    ("Visual", r"ChangeBlur", "Alternar blur"),
+    ("Visual", r"Animations\.sh", "Escolher animações"),
+    ("Visual", r"ZshChangeTheme", "Tema do zsh"),
+    ("Visual", r"Refresh\.sh", "Recarregar waybar / swaync / rofi"),
+    # Sistema
+    ("Sistema", r"swaync-client -t", "Central de notificações"),
+    ("Sistema", r"Kool_Quick_Settings", "Configurações rápidas do Hyprland"),
+    ("Sistema", r"LockScreen", "Bloquear tela"),
+    ("Sistema", r"Wlogout", "Menu desligar / reiniciar / sair"),
+    ("Sistema", r"dispatch exit", "SAIR do Hyprland (imediato!)"),
+    ("Sistema", r"systemctl suspend", "Suspender"),
+    ("Sistema", r"SwitchKeyboardLayout", "Trocar layout do teclado"),
+    ("Sistema", r"Tak0-Per-Window", "Layout de teclado por janela"),
+    ("Sistema", r"AirplaneMode", "Modo avião"),
+    ("Sistema", r"TouchPad", "Liga/desliga touchpad"),
+]
+
+# Itens que Enter NÃO executa (perigosos ou sem sentido fora do contexto)
+NO_RUN = re.compile(r"^(killactive|submap|resizeactive|mouse )|dispatch exit|KillActiveProcess")
+
+# Recursos que não são atalho de teclado: (categoria, onde, descrição, comando)
+FEATURES = [
+    ("Waybar", "Clique  󰊠 BB", "Menu de aplicativos", "rofi -show drun"),
+    ("Waybar", "Direito 󰊠 BB", "Info do sistema (fastfetch)", "kitty --hold -e fastfetch"),
+    ("Waybar", "Clique  󰌌", "Esta central de atalhos", ""),
+    ("Waybar", "Clique  CPU / RAM", "Monitor de sistema (btop)", "kitty -e btop"),
+    ("Waybar", "Clique  GPU", "Monitor da GPU (nvtop)", "kitty -e nvtop"),
+    ("Waybar", "Hover   GPU", "Revela a temperatura do CPU", ""),
+    ("Waybar", "Clique  Docker", "Containers rodando", "kitty -e sh -c 'docker ps; exec zsh'"),
+    ("Waybar", "Clique  Volume", "Mutar som", "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),
+    ("Waybar", "Direito Volume", "Mixer (pavucontrol)", "pavucontrol"),
+    ("Waybar", "Meio    Volume", "Equalizador (EasyEffects)", "easyeffects"),
+    ("Waybar", "Scroll  Volume", "Ajustar volume", ""),
+    ("Waybar", "Clique  Mic", "Mutar microfone", "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
+    ("Waybar", "Clique  Player", "Play / pause (direito: próxima)", "playerctl play-pause"),
+    ("Waybar", "Clique  Bluetooth", "Gerenciar Bluetooth", "blueman-manager"),
+    ("Waybar", "Clique  Rede", "Configurar rede (nmtui)", "kitty -e nmtui"),
+    ("Waybar", "Clique  Relógio", "Alterna hora / data (hover: calendário)", ""),
+    ("Waybar", "Scroll  Workspaces", "Navegar entre workspaces", ""),
+    ("Waybar", "Clique  󰾪", "Impedir tela de dormir", ""),
+    ("Waybar", "Clique  Sino", "Notificações (direito: não perturbe)", "swaync-client -t -sw"),
+    ("Waybar", "Clique  ⏻", "Desligar / reiniciar / sair", "wlogout -b 5 -T 440 -B 440"),
+    ("Terminal", "rice-theme", "Regenerar cores de tudo a partir de palette.json", ""),
+    ("Terminal", "rice-wall", "Trocar wallpaper pelo terminal", ""),
+    ("Terminal", "rice-gaming on|off", "Modo jogo", ""),
+    ("Terminal", "rice-kde", "Sincronizar tema com KDE/Qt/GTK", ""),
+    ("Terminal", "gamemoderun %command%", "Na Steam: ativa GameMode por jogo", ""),
+    ("Arquivos", "~/Pictures/Screenshots", "Pasta dos prints", "xdg-open " + HOME + "/Pictures/Screenshots"),
+    ("Arquivos", "~/my_dots", "Dotfiles (git + stow)", "thunar " + HOME + "/my_dots"),
+]
+
+ICONS = {
+    "Print": "󰹑", "Apps": "󰀻", "Janelas": "󰖲", "Workspaces": "󰕰", "Mídia": "󰝚",
+    "Visual": "󰏘", "Sistema": "󰒓", "Waybar": "󰍜", "Terminal": "󰆍", "Arquivos": "󰉋", "Outros": "󰘳",
+}
+ORDER = list(ICONS)
+
+
+def keyname(b):
+    k = b["key"] or KEYCODES.get(b["keycode"], f"code:{b['keycode']}")
+    k = KEYNAMES.get(k.lower(), k)
+    if len(k) == 1:
+        k = k.upper()
+    elif k.lower().startswith("xf86"):
+        k = k[4:]
+    mods = [n for m, n in MODS if b["modmask"] & m]
+    return " + ".join(mods + [k])
+
+
+def exists(arg):
+    """False se o primeiro executável do comando não existe (ex.: asusctl num desktop)."""
+    first = arg.split()[0] if arg.split() else ""
+    return bool(first) and (shutil.which(first) or os.path.exists(first))
+
+
+def describe(b):
+    line = f"{b['dispatcher']} {b['arg']}".strip()
+    for cat, rx, text in DESCR:
+        m = re.search(rx, line)
+        if m:
+            n = m.group(1) if m.groups() and m.group(1) and m.group(1).isdigit() else ""
+            return cat, text.format(arg=b["arg"], n=n)
+    if b.get("description"):
+        return "Outros", b["description"]
+    short = re.sub(re.escape(HOME) + r"/\.config/hypr/(User)?[Ss]cripts/", "", line)
+    return "Outros", short[:60]
+
+
+def collect():
+    binds = json.loads(subprocess.run(["hyprctl", "binds", "-j"], capture_output=True, text=True).stdout or "[]")
+    rows, seen = [], set()
+    for b in binds:
+        if b["dispatcher"] == "exec" and not exists(b["arg"]):
+            continue
+        keys = keyname(b)
+        cat, text = describe(b)
+        if b["submap"]:
+            keys = f"[{b['submap']}] {keys}"
+        if (keys, text) in seen:
+            continue
+        seen.add((keys, text))
+        cmd = "" if NO_RUN.search(f"{b['dispatcher']} {b['arg']}") else f"{b['dispatcher']}\t{b['arg']}"
+        rows.append((cat, keys, text, cmd))
+    for cat, where, text, cmd in FEATURES:
+        rows.append((cat, where, text, f"exec\t{cmd}" if cmd else ""))
+    rows.sort(key=lambda r: (ORDER.index(r[0]) if r[0] in ORDER else 99))
+    return rows
+
+
+def esc(s):
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def main():
+    rows = collect()
+    width = max(len(r[1]) for r in rows) + 2
+    if "--list" in sys.argv:
+        for cat, keys, text, _ in rows:
+            print(f"{cat:<11} {keys:<{width}} {text}")
+        return
+    lines = [
+        f"<span foreground='#8c8c9c'>{ICONS.get(cat, '•')} {cat:<10}</span> "
+        f"<b>{esc(keys):<{width}}</b> {esc(text)}"
+        for cat, keys, text, _ in rows
+    ]
+    if subprocess.run(["pidof", "rofi"], capture_output=True).returncode == 0:
+        subprocess.run(["pkill", "-x", "rofi"])
+        return
+    res = subprocess.run(
+        ["rofi", "-dmenu", "-i", "-markup-rows", "-format", "i", "-p", "󰌌",
+         "-theme", THEME, "-mesg",
+         "↵ executa o item  ·  ⎋ fecha  ·  busque por tecla, nome ou categoria (ex.: print, workspace, waybar)"],
+        input="\n".join(lines), capture_output=True, text=True,
+    )
+    if res.returncode != 0 or not res.stdout.strip():
+        return
+    cmd = rows[int(res.stdout.strip())][3]
+    if not cmd:
+        return
+    dispatcher, arg = cmd.split("\t", 1)
+    if dispatcher == "exec":
+        subprocess.Popen(["hyprctl", "dispatch", "exec", arg], stdout=subprocess.DEVNULL)
+    else:
+        subprocess.Popen(["hyprctl", "dispatch", dispatcher, arg], stdout=subprocess.DEVNULL)
+
+
+if __name__ == "__main__":
+    main()

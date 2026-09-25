@@ -7,6 +7,12 @@
     "on-click": "pkill rofi || rofi -show drun",
     "on-click-right": "kitty --hold -e fastfetch"
   },
+  // Central de atalhos e recursos (lê hyprctl binds ao vivo). Também: SUPER+H
+  "custom/help": {
+    "format": "󰌌",
+    "tooltip-format": "Atalhos e recursos\nclique: abrir · SUPER+H",
+    "on-click": "$HOME/.local/bin/rice-help"
+  },
   "custom/p2": {
     "format": "P2",
     "tooltip": false,

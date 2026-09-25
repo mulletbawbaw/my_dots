@@ -1,0 +1,11 @@
+/* ── MulletBawbaw // rofi: central de atalhos (rice-help) ───────────
+ * Herda o tema principal; só alarga a janela e troca o título.
+ */
+@import "~/.config/rofi/mulletbawbaw/theme.rasi"
+
+window        { width: 1100px; }
+textbox-title { str: "󰌌 MULLETBAWBAW // CONTROLES"; }
+textbox-hint  { str: "↵ USAR  ⎋ QUIT"; }
+listview      { lines: 16; }
+entry         { placeholder: "print, workspace, SUPER + S, waybar..."; }
+element-text  { font: "JetBrainsMono Nerd Font 11"; }
