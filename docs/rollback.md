@@ -37,7 +37,7 @@ Commits da branch (use `git revert <hash>` para desfazer só um):
 | `24f9a92` | design system, kitty, zsh, fastfetch, wallpapers, hyprland, waybar, rofi |
 | `c44a7c7` | swaync, wlogout, hyprlock |
 | `fd915c6` | neovim: colorscheme, dashboard, LSP |
-| último | KDE/Qt/GTK, docs |
+| `f109668` | KDE/Qt/GTK, docs |
 
 Mudanças feitas **fora** do git (restaure manualmente se voltar para `main`):
 
