@@ -10,7 +10,24 @@ python3 "$DOTS/theme/generate.py" "$@"
 # Arquivos novos precisam de link; stow ignora os que já existem.
 stow --dir="$DOTS" --target="$HOME" --no-folding . 2>/dev/null || echo "aviso: stow reportou conflito; rode manualmente com --verbose" >&2
 
+# GTK: o KDE regrava ~/.config/gtk-{3,4}.0/colors.css ao aplicar um esquema;
+# aqui copiamos a versão MulletBawbaw (arquivo comum, não link).
+for v in 3.0 4.0; do
+    mkdir -p "$HOME/.config/gtk-$v"
+    cp -f "$HOME/.config/mulletbawbaw/gtk-colors.css" "$HOME/.config/gtk-$v/colors.css"
+    [[ -f "$HOME/.config/gtk-$v/gtk.css" ]] || echo "@import 'colors.css';" > "$HOME/.config/gtk-$v/gtk.css"
+done
+
 if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+    # GTK no Wayland lê gsettings (não o settings.ini)
+    gsettings set org.gnome.desktop.interface gtk-theme 'Breeze'
+    gsettings set org.gnome.desktop.interface icon-theme 'breeze-dark'
+    gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice'
+    gsettings set org.gnome.desktop.interface cursor-size 24
+    gsettings set org.gnome.desktop.interface font-name 'Noto Sans 10'
+    gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 11'
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+
     hyprctl reload >/dev/null
     pkill -SIGUSR2 waybar 2>/dev/null || true          # recarrega CSS da waybar
     swaync-client --reload-css >/dev/null 2>&1 || true

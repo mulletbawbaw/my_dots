@@ -1,4 +1,79 @@
-# my_dots
+# my_dots — MulletBawbaw Undead Arcade
+
+> Hotline Miami + Regular Show + fliperama + CRT + terminal hacker + um zumbi verde/roxo.
+
+Rice para Arch Linux com **Hyprland** (dia a dia, código, terminal) e **KDE Plasma/X11**
+(Krita, Blender, Aseprite, mesa Huion) compartilhando a mesma identidade visual.
+Hardware alvo: Ryzen 5 1600 · RTX 3060 · Odyssey G30B 144 Hz + LF24T35 60 Hz.
+
+![wallpapers](docs/screenshots/wallpapers.png)
+
+| | |
+| --- | --- |
+| ![fastfetch](docs/screenshots/fastfetch.png) | ![nvim](docs/screenshots/nvim-dashboard.png) |
+| ![rofi](docs/screenshots/rofi.png) | ![nvim código](docs/screenshots/nvim-code.png) |
+
+![waybar](docs/screenshots/waybar-p1.png)
+![wlogout](docs/screenshots/wlogout.png)
+
+## Como funciona
+
+Uma paleta, vários apps: [`theme/palette.json`](theme/palette.json) → `rice-theme` →
+arquivos de cor gerados para cada programa. Detalhes em
+[docs/design-system.md](docs/design-system.md).
+
+| Componente | Escolha | Onde |
+| --- | --- | --- |
+| Compositor | Hyprland (visual em `hypr/mulletbawbaw/rice.conf`, carregado por último) | `.config/hypr` |
+| Barra | Waybar P1 (HUD completa) + P2 (enxuta) | `.config/waybar` |
+| Launcher | Rofi "SELECT" | `.config/rofi/mulletbawbaw` |
+| Notificações | SwayNC "INBOX" | `.config/swaync` |
+| Energia / lock | wlogout "CONTINUE?" · hyprlock "GAME PAUSED" | `.config/wlogout`, `hypr/hyprlock.conf` |
+| Terminal / shell | kitty 94% + zsh (Oh My Zsh, prompt próprio) | `.config/kitty`, `.config/zsh/mulletbawbaw` |
+| Editor | LazyVim + colorscheme `mulletbawbaw` | `.config/nvim` |
+| Info | Fastfetch "PLAYER STATUS" | `.config/fastfetch/config.jsonc` |
+| KDE | esquema `MulletBawbaw.colors` + Breeze | `.local/share/color-schemes`, `rice-kde` |
+
+## Comandos do rice
+
+| Comando | Faz |
+| --- | --- |
+| `rice-theme` | regenera cores, faz stow de arquivos novos, aplica GTK e recarrega Hyprland/Waybar/SwayNC/kitty |
+| `rice-theme --check` / `--contrast` | confere gerados / contraste WCAG |
+| `rice-wall [dir\|imagem]` | wallpaper; sem argumento aplica o par MulletBawbaw por monitor |
+| `rice-gaming on\|off\|toggle\|status` | modo jogo: desliga efeitos do compositor; `off` restaura com `hyprctl reload` |
+| `rice-kde [--undo]` | aplica/desfaz o tema no KDE (rodar dentro do Plasma) |
+| `sysinfo` | fastfetch "PLAYER STATUS" (`sysinfo-pokemon` mantém o antigo) |
+
+## Atalhos novos ou alterados
+
+| Atalho | Ação |
+| --- | --- |
+| `SUPER + R` | modo redimensionar (setas ou `hjkl`, `Esc`/`Enter` sai) |
+| `SUPER + SHIFT + setas` | mover janela para o monitor vizinho (antes também redimensionava) |
+| `SUPER + A` | overview (Quickshell) |
+| `SUPER + SHIFT + G` | `rice-gaming toggle` |
+| Waybar `󰊠 BB` | clique: apps · clique direito: player status |
+| Waybar GPU | passe o mouse para ver a temperatura do CPU |
+
+## Jogos
+
+`rice-gaming` só cuida do compositor. O **GameMode** real é por jogo, na Steam:
+opções de inicialização → `gamemoderun %command%` (o `/etc/gamemode.ini` já pede
+governor `performance`). `render:direct_scanout = 2` e `misc:vrr = 2` (VRR só em fullscreen)
+continuam como estavam.
+
+## Documentação
+
+- [Design system](docs/design-system.md) — paleta, tipografia, forma, uso do personagem
+- [Reinstalação](docs/installation.md) — do Arch limpo até o rice
+- [Rollback](docs/rollback.md) — por componente, por git e pelo backup completo
+- [Validação](docs/validation.md) — medições antes/depois e checklist
+- [Changelog](CHANGELOG.md)
+
+---
+
+## Referência geral dos dotfiles
 
 Dotfiles para Arch Linux com foco em Hyprland/Wayland. O repositório guarda apenas configuração reprodutível; caches, cookies, bancos locais, binários de apps e estado de sessão ficam fora para manter o clone leve e seguro.
 
@@ -46,7 +121,7 @@ stow --target="$HOME" --no-folding --simulate --verbose .
 | `SUPER + Return` | Abre terminal definido em `01-UserDefaults.conf`. |
 | `SUPER + E` | Abre gerenciador de arquivos definido em `01-UserDefaults.conf`. |
 | `SUPER + B` | Abre URL no navegador padrao. |
-| `SUPER + A` | Alterna overview via AGS, se instalado. |
+| `SUPER + A` | Overview de workspaces (Quickshell). |
 | `SUPER + Q` | Fecha a janela ativa. |
 | `SUPER + Shift + Q` | Mata o processo da janela ativa. |
 | `Ctrl + Alt + L` | Bloqueia a tela. |

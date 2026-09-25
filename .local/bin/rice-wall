@@ -8,7 +8,7 @@ PRIMARY="${MB_PRIMARY_OUTPUT:-DP-1}"
 STATE="$HOME/.config/hypr/current_wallpaper"
 TARGET="${1:-$HOME/.local/share/mulletbawbaw/wallpapers/undead-arcade}"
 TARGET="$(realpath "$TARGET")"
-FX=(--transition-type grow --transition-pos 0.5,0.5 --transition-duration 0.6 --transition-fps 144)
+FX=(--transition-type grow --transition-pos "0.5,0.5" --transition-duration 0.6 --transition-fps 144)
 
 pgrep -x awww-daemon >/dev/null || { awww-daemon & sleep 0.5; }
 

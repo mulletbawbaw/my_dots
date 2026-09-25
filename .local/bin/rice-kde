@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# rice-kde [--undo]
+# Aplica a identidade MulletBawbaw no KDE Plasma. RODE DENTRO DA SESSÃO KDE.
+#
+# Mexe só em aparência: esquema de cores, cursor, fontes, wallpapers (desktop
+# e tela de bloqueio). NÃO mexe em: Huion/xinput, KWin/efeitos, compositor,
+# monitores/refresh, Krita/Blender. Estilo de widgets e decoração continuam Breeze.
+#
+# --undo volta para Breeze Dark + cursor Breeze + wallpaper padrão do Plasma.
+set -euo pipefail
+
+WALLS="$HOME/.local/share/mulletbawbaw/wallpapers/undead-arcade"
+QDBUS=$(command -v qdbus6 || command -v qdbus || true)
+
+[[ ${XDG_CURRENT_DESKTOP:-} == *KDE* ]] || { echo "rice-kde: rode dentro da sessão KDE Plasma" >&2; exit 1; }
+
+set_wallpapers() {  # $1 = imagem do monitor principal (DP-0, x=1920), $2 = demais
+    [[ -n $QDBUS ]] || { echo "qdbus não encontrado; wallpaper não aplicado" >&2; return; }
+    "$QDBUS" org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "
+        for (const d of desktops()) {
+            const g = screenGeometry(d.screen);
+            d.wallpaperPlugin = 'org.kde.image';
+            d.currentConfigGroup = ['Wallpaper', 'org.kde.image', 'General'];
+            d.writeConfig('Image', g.x >= 1920 ? 'file://$1' : 'file://$2');
+            d.writeConfig('FillMode', '2');
+        }" >/dev/null
+}
+
+if [[ ${1:-} == --undo ]]; then
+    plasma-apply-colorscheme BreezeDark
+    plasma-apply-cursortheme breeze_cursors
+    DEF=/usr/share/wallpapers/Next/contents/images/5120x2880.png
+    set_wallpapers "$DEF" "$DEF"
+    kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "file://$DEF"
+    echo "KDE revertido para Breeze Dark."
+    exit 0
+fi
+
+plasma-apply-colorscheme MulletBawbaw
+plasma-apply-cursortheme Bibata-Modern-Ice
+
+# Fontes: Noto Sans na interface, JetBrainsMono no monoespaçado
+kwriteconfig6 --file kdeglobals --group General --key font "Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1"
+kwriteconfig6 --file kdeglobals --group General --key fixed "JetBrainsMono Nerd Font,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1"
+
+set_wallpapers "$WALLS/main.png" "$WALLS/side.png"
+kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "file://$WALLS/main.png"
+
+echo "MulletBawbaw aplicado no KDE. Fontes aparecem por completo após novo login."

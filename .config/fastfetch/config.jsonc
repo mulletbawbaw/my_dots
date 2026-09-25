@@ -22,7 +22,7 @@
       "width": 10,
       "color": { "elapsed": "92", "total": "90" }
     },
-    "percent": { "color": { "green": "92", "yellow": "33", "red": "31" } }
+    "percent": { "type": ["bar"], "color": { "green": "92", "yellow": "33", "red": "31" } }
   },
   "modules": [
     { "type": "custom", "format": "{#1;92}M U L L E T B A W B A W{#0}  {#90}lv.{#0}{#95}99{#0} {#90}undead{#0}" },
