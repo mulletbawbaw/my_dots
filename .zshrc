@@ -1,54 +1,35 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# ── MulletBawbaw // .zshrc ───────────────────────────────────────────
+# Ordem: PATH → Oh My Zsh (plugins) → núcleo do rice → prompt.
+# Personalizações ficam em ~/.config/zsh/mulletbawbaw/ (versionado em ~/my_dots).
 
+# PATH antes de tudo, para plugins e completions enxergarem os binários
+export PATH="$HOME/.local/bin:$PATH"          # comandos do rice, Codex installer
+export PATH="/usr/lib/ccache/bin:$PATH"       # cache de compilação C/C++
+
+export EDITOR=nvim VISUAL=nvim
+
+# ── Oh My Zsh ────────────────────────────────────────────────────────
 export ZSH="$HOME/.oh-my-zsh"
-
-# Prompt próprio (MulletBawbaw) é carregado após o Oh My Zsh.
-# Rollback: volte para ZSH_THEME="agnosterzak" e remova o source abaixo.
-ZSH_THEME=""
+ZSH_THEME=""                                   # prompt próprio (ver prompt.zsh)
+# Rollback do prompt: ZSH_THEME="agnosterzak" e comente o source do prompt.zsh
+DISABLE_AUTO_TITLE=false
+COMPLETION_WAITING_DOTS=false
 
 plugins=(
     git
     archlinux
     zsh-autosuggestions
-    zsh-syntax-highlighting
+    zsh-syntax-highlighting   # deve ser o último plugin
 )
 
-source $ZSH/oh-my-zsh.sh
-source ~/.config/zsh/mulletbawbaw/prompt.zsh
+source "$ZSH/oh-my-zsh.sh"
 
-# Check archlinux plugin commands here
-# https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/archlinux
+# ── MulletBawbaw ─────────────────────────────────────────────────────
+for _mb in core prompt; do
+    if [[ -r ~/.config/zsh/mulletbawbaw/$_mb.zsh ]]; then source ~/.config/zsh/mulletbawbaw/$_mb.zsh; fi
+done
+unset _mb
 
-# Display Pokemon-colorscripts
-# Project page: https://gitlab.com/phoneybadger/pokemon-colorscripts#on-other-distros-and-macos
-#pokemon-colorscripts --no-title -s -r #without fastfetch
-# Evita iniciar dois processos e renderizar uma imagem a cada novo terminal.
-# Execute `sysinfo` quando quiser exibir esta tela.
-alias sysinfo='fastfetch'   # tela PLAYER STATUS do MulletBawbaw
-alias sysinfo-pokemon='pokemon-colorscripts --no-title -s -r | fastfetch -c $HOME/.config/fastfetch/config-pokemon.jsonc --logo-type file-raw --logo-height 10 --logo-width 5 --logo -'
-
-# fastfetch. Will be disabled if above colorscript was chosen to install
-#fastfetch -c $HOME/.config/fastfetch/config-compact.jsonc
-
-# Set-up icons for files/directories in terminal using lsd
-alias ls='lsd'
-alias l='ls -l'
-alias la='ls -a'
-alias lla='ls -la'
-alias lt='ls --tree'
-
-# Set-up FZF key bindings (CTRL R for fuzzy history finder)
-source <(fzf --zsh)
-
-HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
-setopt appendhistory
-
-# >>> Codex installer >>>
-export PATH="/home/bawkare/.local/bin:$PATH"
-# <<< Codex installer <<<
-
-# Cache C/C++ compilations (GCC and Clang) between incremental builds.
-export PATH="/usr/lib/ccache/bin:$PATH"
+# Configurações locais desta máquina (não versionadas), se existirem
+if [[ -r ~/.zshrc.local ]]; then source ~/.zshrc.local; fi
+true   # primeiro prompt sem código de erro herdado da inicialização

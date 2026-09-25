@@ -9,6 +9,7 @@ Nomes:   qualquer chave de "colors", ansi0..ansi15, fonts.<k>, shape.<k>, genera
 Filtros: hex      -> RRGGBB
          rgb      -> r, g, b
          kde      -> r,g,b
+         sgr      -> r;g;b                  (sequências ANSI truecolor)
          rgba:A   -> rgba(r, g, b, A)       (CSS / Rofi, A entre 0 e 1)
          hypr:AA  -> rgba(RRGGBBAA)         (Hyprland, AA em hex)
 
@@ -52,6 +53,8 @@ def apply_filter(value, name, arg):
         return value[1:]
     if name == "rgb":
         return f"{r}, {g}, {b}"
+    if name == "sgr":
+        return f"{r};{g};{b}"
     if name == "kde":
         return f"{r},{g},{b}"
     if name == "rgba":

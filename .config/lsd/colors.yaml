@@ -1,0 +1,39 @@
+# GERADO por theme/generate.py a partir de theme/palette.json. Não edite; rode `rice-theme`.
+user: "#B875F0"
+group: "#877A9B"
+permission:
+  read: "#91C979"
+  write: "#EBCB78"
+  exec: "#FF6B85"
+  exec-sticky: "#DE75BD"
+  no-access: "#877A9B"
+  octal: "#79CDD0"
+  acl: "#79CDD0"
+  context: "#79CDD0"
+date:
+  hour-old: "#B6F36A"
+  day-old: "#91C979"
+  older: "#877A9B"
+size:
+  none: "#877A9B"
+  small: "#B0A4BE"
+  medium: "#B875F0"
+  large: "#DE75BD"
+inode:
+  valid: "#B0A4BE"
+  invalid: "#877A9B"
+links:
+  valid: "#79CDD0"
+  invalid: "#FF6B85"
+tree-edge: "#49365F"
+git-status:
+  default: "#877A9B"
+  unmodified: "#877A9B"
+  ignored: "#877A9B"
+  new-in-index: "#B6F36A"
+  new-in-workdir: "#DE75BD"
+  typechange: "#EBCB78"
+  deleted: "#FF6B85"
+  renamed: "#79CDD0"
+  modified: "#EBCB78"
+  conflicted: "#FF6B85"

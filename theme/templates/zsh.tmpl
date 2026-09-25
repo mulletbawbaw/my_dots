@@ -6,3 +6,11 @@ typeset -gA MB=(
   purple '{{purple}}' purple_neon '{{purple_neon}}' zombie '{{zombie}}' green_neon '{{green_neon}}'
   danger '{{danger}}' warning '{{warning}}' magenta '{{magenta}}' cyan '{{cyan}}' blue '{{blue}}'
 )
+
+# fzf (Ctrl+R, Ctrl+T, Alt+C, **<Tab>)
+MB_FZF_COLORS='--color=fg:{{fg}},bg:-1,hl:{{green_neon}},fg+:{{ink}},bg+:{{green_neon}},hl+:{{ink}}:bold'\
+',info:{{subtle}},prompt:{{purple}},pointer:{{ink}},marker:{{magenta}},spinner:{{purple}}'\
+',header:{{purple}},border:{{border}},label:{{green_neon}},query:{{fg}},gutter:-1,separator:{{border}},scrollbar:{{border}}'
+
+# Item selecionado no menu de completion (verde neon, texto escuro), truecolor em SGR
+MB_MENU_SELECT='48;2;{{green_neon|sgr}};38;2;{{ink|sgr}};1'

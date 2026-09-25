@@ -24,7 +24,8 @@ bawbaw-zombie.png  ──► theme/nvim_art.py    (pixel art do dashboard do Neo
 | `rofi.tmpl` | `.config/rofi/mulletbawbaw/colors.rasi` | Rofi e todos os menus que importam `config.rasi` |
 | `kitty.tmpl` | `.config/kitty/mulletbawbaw.conf` | Kitty (e, via ANSI, Fastfetch/btop/CLI) |
 | `lua.tmpl` | `.config/nvim/lua/mulletbawbaw/palette.lua` | colorscheme + lualine |
-| `zsh.tmpl` | `.config/zsh/mulletbawbaw/colors.zsh` | prompt e syntax highlighting |
+| `zsh.tmpl` | `.config/zsh/mulletbawbaw/colors.zsh` | prompt, syntax highlighting, menu de completion, fzf |
+| `lsd.tmpl` | `.config/lsd/colors.yaml` | `ls`/`lsd` |
 | `kde.tmpl` | `.local/share/color-schemes/MulletBawbaw.colors` | KDE Plasma (e GTK dentro do KDE) |
 | `qt6ct.tmpl` | `.config/qt6ct/colors/MulletBawbaw.conf` | apps Qt no Hyprland |
 | `gtk.tmpl` | `.config/mulletbawbaw/gtk-colors.css` | apps GTK3/GTK4 no Hyprland |

@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-25 (tarde)
+
+### Corrigido
+- **Flash roxo a cada Tab**: o zsh emitia bell em completions ambíguas e o kitty o
+  desenhava como flash roxo da janela. Agora `nobeep`/`nolistbeep` no zsh e
+  `visual_bell_duration 0` no kitty. O rastro do cursor segue a cor do cursor (verde).
+- Primeiro prompt aparecia com `󰚌 1` (código de saída herdado do `.zshrc`).
+- Erro "rice.conf inaccessible" era transitório (troca de branch durante o auto-reload do Hyprland).
+
+### Novo
+- `~/.config/zsh/mulletbawbaw/core.zsh`: histórico 100k compartilhado sem duplicatas,
+  menu de completion com grupos roxos e seleção verde neon, Shift+Tab, Ctrl+Espaço aceita
+  sugestão, Ctrl+Backspace/Delete por palavra, Ctrl+X Ctrl+E edita no nvim, fzf e lsd na
+  paleta, `mkcd`, PATH sem duplicatas, suporte a `~/.zshrc.local`.
+- `.zshrc` reorganizado (PATH → Oh My Zsh → núcleo → prompt).
+
 ## rice/mulletbawbaw-v1 — 2026-09-25
 
 ### Novo

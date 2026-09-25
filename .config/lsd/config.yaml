@@ -1,0 +1,12 @@
+# ── MulletBawbaw // lsd ── cores em colors.yaml (gerado por ~/my_dots/theme/generate.py)
+color:
+  when: auto
+  theme: custom
+icons:
+  when: auto
+  theme: fancy
+date: +%d/%m %H:%M
+size: short
+sorting:
+  dir-grouping: first
+hyperlink: auto
